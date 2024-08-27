@@ -1,9 +1,9 @@
 package com.smallfish.weblog.common.exception;
 
 import com.smallfish.weblog.common.enums.ResultCodeEnum;
-import com.smallfish.weblog.common.exception.BusinessException;
 import com.smallfish.weblog.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ Exception.class })
     @ResponseBody
     public Result<Object> handlerOtherException(HttpServletRequest request, Exception e) {
-        log.error("{} request fail, errorMessage: {}", request.getRequestURI(), e.getMessage());
+        log.error("{} request error, ", request.getRequestURI(), e);
         return Result.fail(ResultCodeEnum.SYSTEM_ERROR);
     }
 
@@ -55,6 +55,7 @@ public class GlobalExceptionHandler {
 
         StringBuilder stringBuilder = new StringBuilder();
 
+        // 获取FieldError 如果错误执行
         Optional.ofNullable(bindingResult.getFieldErrors()).ifPresent(errors -> {
             errors.forEach(error ->
                     stringBuilder.append(error.getField())
@@ -68,6 +69,13 @@ public class GlobalExceptionHandler {
         String errorMessage = stringBuilder.toString();
         log.warn("{} request fail, errorCode: {}, errorMessage: {}", request.getRequestURI(), errorCode, errorMessage);
         return Result.fail(errorCode, errorMessage);
+    }
+
+    @ExceptionHandler({ AccessDeniedException.class })
+    public void throwAccessDeniedException(AccessDeniedException e) throws AccessDeniedException {
+        // 捕捉到鉴权失败异常 主动抛出 交给RestAccessDeniedHandler 处理
+        log.info("============= 捕获到 AccessDeniedException");
+        throw e;
     }
 
 }

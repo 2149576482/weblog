@@ -23,5 +23,14 @@ export default defineConfig({
       // 定义一个别名 '@' 该别名对于当前javascript模块文件所在目录下的src目录的绝对路径
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    }
+  },
 })

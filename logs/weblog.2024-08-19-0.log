@@ -1,0 +1,14 @@
+[TraceId: ] 2024-08-19 11:06:04.017 [main] INFO  com.smallfish.weblog.web.StarterApplication - Starting StarterApplication using Java 1.8.0_251 on DESKTOP-A5EBBKG with PID 85952 (E:\java_workspace\project\weblog\weblog-springboot\weblog-starter\target\classes started by xu in E:\java_workspace\project\weblog)
+[TraceId: ] 2024-08-19 11:06:04.019 [main] INFO  com.smallfish.weblog.web.StarterApplication - The following profiles are active: prod
+[TraceId: ] 2024-08-19 11:06:04.718 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2024-08-19 11:06:04.725 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2024-08-19 11:06:04.725 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2024-08-19 11:06:04.827 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2024-08-19 11:06:04.827 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 781 ms
+[TraceId: ] 2024-08-19 11:06:05.100 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[TraceId: ] 2024-08-19 11:06:05.106 [main] INFO  com.smallfish.weblog.web.StarterApplication - Started StarterApplication in 1.449 seconds (JVM running for 2.874)
+[TraceId: ] 2024-08-19 11:06:10.719 [http-nio-8080-exec-2] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[TraceId: ] 2024-08-19 11:06:10.719 [http-nio-8080-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[TraceId: ] 2024-08-19 11:06:10.719 [http-nio-8080-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+[TraceId: 43ed5198-7d47-41f8-9936-2015b53d116e] 2024-08-19 11:06:10.909 [http-nio-8080-exec-2] INFO  c.s.weblog.common.aspect.ApiOperationLogAspect - =====请求开始:[测试接口], 入参:{"name":"小红","password":"123456"}, 请求类:TestController, 请求方法:test ======================== 
+[TraceId: 43ed5198-7d47-41f8-9936-2015b53d116e] 2024-08-19 11:06:10.918 [http-nio-8080-exec-2] INFO  c.s.weblog.common.aspect.ApiOperationLogAspect - =====请求结束: [测试接口], 耗时: 98ms, 出参: {"name":"小红","password":"123456"} =================================== 

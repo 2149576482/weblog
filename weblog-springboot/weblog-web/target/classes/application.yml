@@ -1,0 +1,34 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    # 默认激活 dev 环境
+    active: dev
+  servlet:
+    multipart:
+      # 限制单个上传文件的最大大小为 10MB 如果上传文件超过这个值 就无法上传
+      max-file-size: 10MB
+      # 限制整个上传请求的最大大小为 10MB 这个包括所有上传文件大小之和 如果请求总大小超过这个值 就无法上传
+      max-request-size: 10MB
+    #  jackson:
+    # 若返回字段为空 则不返回
+#    default-property-inclusion: non_null
+    # 设置日期字段格式
+#    date-format: yyyy-MM-dd HH:mm:ss
+
+#=================================================================
+# log 日志
+#=================================================================
+logging:
+  config: classpath:logback-weblog.xml
+#    "[TraceId: %X{traceId}] %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) [%thread] %clr(%-40.40logger{39}){cyan} : %msg%n"
+jwt:
+  # 签发人
+  issuser: smallfish
+  secret: w6AnzSgVbYo2Ztuoi33XL8WIr9H+GexPKlal8hlOHa2AhsqGcMINg4bWz3NlEY8DAGNZOXJ7BeF7UjxEEIvWlg==
+  # token过期时间 (分钟) 24*60
+  tokenExpireTime: 1440
+  # token 请求头中的 key 值
+  tokenHeaderKey: Authorization
+  # token 请求头中的 value 值前缀
+  tokenPrefix: Bearer
