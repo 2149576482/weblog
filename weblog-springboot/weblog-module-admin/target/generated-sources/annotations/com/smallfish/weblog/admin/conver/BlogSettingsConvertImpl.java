@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-27T10:38:29+0800",
+    date = "2024-08-28T10:00:41+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_251 (Oracle Corporation)"
 )
 public class BlogSettingsConvertImpl implements BlogSettingsConvert {
