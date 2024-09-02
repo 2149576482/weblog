@@ -28,7 +28,8 @@ public enum ResultCodeEnum implements BaseExceptionInterface {
     CATEGORY_NOT_EXISTED("20008", "分类id不存在"),
     ARTICLE_NOT_FOUND("20009", "该文章不存在!"),
     CATEGORY_CAN_NOT_DELETE("20010", "此分类下包含文章, 请先删除对应的文章, 才能删除此分类!"),
-    TAG_CAN_NOT_DELETE("20011", "此标签下包含文章，请先删除对应的文章, 才能删除此标签!");
+    TAG_CAN_NOT_DELETE("20011", "此标签下包含文章，请先删除对应的文章, 才能删除此标签!"),
+    TAG_NOT_EXISTED("20012", "标签id不存在！");
 
     // 异常码
     private String errorCode;

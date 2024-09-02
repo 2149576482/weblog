@@ -2,6 +2,10 @@ package com.smallfish.weblog.admin.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smallfish.weblog.admin.conver.ArticleConvert;
+import com.smallfish.weblog.admin.event.DeleteArticleEvent;
+import com.smallfish.weblog.admin.event.PublishArticleEvent;
+import com.smallfish.weblog.admin.event.ReadArticleEvent;
+import com.smallfish.weblog.admin.event.UpdateArticleEvent;
 import com.smallfish.weblog.admin.model.vo.article.*;
 import com.smallfish.weblog.admin.service.AdminArticleService;
 import com.smallfish.weblog.common.domain.dos.*;
@@ -11,6 +15,7 @@ import com.smallfish.weblog.common.exception.BusinessException;
 import com.smallfish.weblog.common.utils.PageResponse;
 import com.smallfish.weblog.common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +42,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     private ArticleContentMapper articleContentMapper;
 
     @Resource
+    private ApplicationEventPublisher eventPublisher;
+
+    @Resource
     private ArticleCategoryRelMapper articleCategoryRelMapper;
 
     @Resource
@@ -50,9 +58,6 @@ public class AdminArticleServiceImpl implements AdminArticleService {
 
     /**
      * 发布文章
-     *
-     * @param publishArticleReqVO
-     * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -89,6 +94,10 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         // 保存文章关联的标签集合
         List<String> tags = publishArticleReqVO.getTags();
         insertTags(articleId, tags);
+
+        // 发送文章发布事件
+        eventPublisher.publishEvent(new PublishArticleEvent(this, articleId));
+
         return Result.ok();
     }
 
@@ -96,21 +105,25 @@ public class AdminArticleServiceImpl implements AdminArticleService {
      * 删除文章
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result deleteArticle(DeleteArticleReqVO deleteArticleReqVO) {
 
-        Long articleReqVOId = deleteArticleReqVO.getId();
+        Long articleId = deleteArticleReqVO.getId();
 
         // 删除文章
-        articleMapper.deleteById(articleReqVOId);
+        articleMapper.deleteById(articleId);
 
         // 删除对应文章内容
-        articleContentMapper.deleteByArticleId(articleReqVOId);
+        articleContentMapper.deleteByArticleId(articleId);
 
         // 删除对应分类关系
-        articleCategoryRelMapper.deleteByArticleId(articleReqVOId);
+        articleCategoryRelMapper.deleteByArticleId(articleId);
 
         // 删除对应标签关系
-        articleTagRelMapper.deleteByArticleId(articleReqVOId);
+        articleTagRelMapper.deleteByArticleId(articleId);
+
+        // 发布文章删除事件
+        eventPublisher.publishEvent(new DeleteArticleEvent(this, articleId));
         return Result.ok();
 
     }
@@ -224,6 +237,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         articleTagRelMapper.deleteByArticleId(articleId);
         List<String> tags = updateArticleReqVO.getTags();
         insertTags(articleId, tags);
+
+        // 执行更新事件
+        eventPublisher.publishEvent(new UpdateArticleEvent(this, articleId));
         return Result.ok();
 
 
@@ -272,45 +288,43 @@ public class AdminArticleServiceImpl implements AdminArticleService {
                     existTags.add(String.valueOf(tagNameMap.get(notExistTag.toLowerCase())));
                 }
             }
-
-            // 将提交上来的 已存在表中的标签 文章-标签关联关系入库
-            if (!CollectionUtils.isEmpty(existTags)) {
-                ArrayList<ArticleTagRelDO> arrayList = new ArrayList<>();
-                existTags.forEach(tagId -> {
-                    ArticleTagRelDO articleTagRelDO = ArticleTagRelDO.builder()
-                            .articleId(articleId)
-                            .tagId(Long.valueOf(tagId))
-                            .build();
-                    arrayList.add(articleTagRelDO);
-                });
-                articleTagRelMapper.insertBatchSomeColumn(arrayList);
-            }
-
-            // 将提交上来的 不存在表中的 入库保存
-            if (!CollectionUtils.isEmpty(notExistTags)) {
-                List<ArticleTagRelDO> tagDOList = new ArrayList<>();
-                // 开始循环
-                notExistTags.forEach(tagName -> {
-                    TagDO tagDO = TagDO.builder()
-                            .name(tagName)
-                            .createTime(LocalDateTime.now())
-                            .updateTime(LocalDateTime.now()).build();
-                    tagMapper.insert(tagDO);
-
-                    // 拿到保存的标签ID
-                    Long tagId = tagDO.getId();
-
-                    // 文章标签对应关系
-                    ArticleTagRelDO articleTagRelDO = ArticleTagRelDO.builder()
-                            .tagId(tagId).articleId(articleId).build();
-
-                    tagDOList.add(articleTagRelDO);
-                });
-                // 循环结束 执行插入
-                articleTagRelMapper.insertBatchSomeColumn(tagDOList);
-            }
+        }
+        // 将提交上来的 已存在表中的标签 文章-标签关联关系入库
+        if (!CollectionUtils.isEmpty(existTags)) {
+            ArrayList<ArticleTagRelDO> arrayList = new ArrayList<>();
+            existTags.forEach(tagId -> {
+                ArticleTagRelDO articleTagRelDO = ArticleTagRelDO.builder()
+                        .articleId(articleId)
+                        .tagId(Long.valueOf(tagId))
+                        .build();
+                arrayList.add(articleTagRelDO);
+            });
+            articleTagRelMapper.insertBatchSomeColumn(arrayList);
         }
 
+        // 将提交上来的 不存在表中的 入库保存
+        if (!CollectionUtils.isEmpty(notExistTags)) {
+            List<ArticleTagRelDO> tagDOList = new ArrayList<>();
+            // 开始循环
+            notExistTags.forEach(tagName -> {
+                TagDO tagDO = TagDO.builder()
+                        .name(tagName)
+                        .createTime(LocalDateTime.now())
+                        .updateTime(LocalDateTime.now()).build();
+                tagMapper.insert(tagDO);
+
+                // 拿到保存的标签ID
+                Long tagId = tagDO.getId();
+
+                // 文章标签对应关系
+                ArticleTagRelDO articleTagRelDO = ArticleTagRelDO.builder()
+                        .tagId(tagId).articleId(articleId).build();
+
+                tagDOList.add(articleTagRelDO);
+            });
+            // 循环结束 执行插入
+            articleTagRelMapper.insertBatchSomeColumn(tagDOList);
+        }
     }
 }
 

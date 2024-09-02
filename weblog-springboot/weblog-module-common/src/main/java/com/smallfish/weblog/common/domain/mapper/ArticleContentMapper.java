@@ -20,7 +20,7 @@ public interface ArticleContentMapper extends BaseMapper<ArticleContentDO> {
     }
 
     /**
-     * 根据文章id 查询分类
+     * 根据文章id 查询正文
      */
     default String findContentByArticleId(Long articleId) {
         ArticleContentDO articleContentDO = selectOne(Wrappers.<ArticleContentDO>lambdaQuery()
@@ -29,7 +29,7 @@ public interface ArticleContentMapper extends BaseMapper<ArticleContentDO> {
     }
 
     /**
-     * 根据文章id 更新分类
+     * 根据文章id 更新正文
      */
     default int updateContentByArticleId(ArticleContentDO articleContentDO) {
         return update(articleContentDO, Wrappers.<ArticleContentDO>lambdaUpdate()

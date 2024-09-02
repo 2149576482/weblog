@@ -3,6 +3,10 @@ import 'animate.css'
 // 导入nprogress
 import 'nprogress/nprogress.css'
 
+// 图片点击放大
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
+
 import { createApp } from 'vue'
 
 // 引入全局状态管理 pinia
@@ -22,7 +26,9 @@ const app = createApp(App)
 app.use(pinia)
 // 应用路由
 app.use(router)
+app.use(VueViewer)
 app.mount('#app')
+
 
 // 引入图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

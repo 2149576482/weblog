@@ -71,6 +71,12 @@
             <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.smallfish</groupId>
+            <artifactId>weblog-module-search</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 

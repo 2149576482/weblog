@@ -31,6 +31,7 @@
 
             <!-- 分页列表 -->
             <el-table :data="tableData" border stripe style="width: 100%" v-loading="tableLoading">
+                <el-table-column prop="id" label="ID" width="50" />
                 <el-table-column prop="title" label="标题" width="380" />
                 <el-table-column prop="cover" label="封面" width="180">
                     <template #default="scope">
@@ -45,6 +46,11 @@
                                 <Edit />
                             </el-icon>
                             编辑</el-button>
+                        <el-button size="small" @click="goArticleDetailPage(scope.row.id)">
+                            <el-icon class="mr-1">
+                                <View />
+                            </el-icon>
+                            预览</el-button>
                         <el-button type="danger" size="small" @click="deleteArticleSubmit(scope.row)">
                             <el-icon class="mr-1">
                                 <Delete />
@@ -112,7 +118,8 @@
                 </el-form-item>
                 <el-form-item label="分类" prop="categoryId">
                     <el-select v-model="form.categoryId" clearable placeholder="---请选择---" size="large">
-                        <el-option v-for="item in categories" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-option v-for="item in categories" :key="item.value" :label="item.label"
+                            :value="item.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="标签" prop="tags">
@@ -152,7 +159,8 @@
                 </el-affix>
             </template>
             <!-- label-position="top" 用于指定 label 元素在上面 -->
-            <el-form :model="updateArticleForm" ref="updateArticleFormRef" label-position="top" size="large" :rules="rules">
+            <el-form :model="updateArticleForm" ref="updateArticleFormRef" label-position="top" size="large"
+                :rules="rules">
                 <el-form-item label="标题" prop="title">
                     <el-input v-model="updateArticleForm.title" autocomplete="off" size="large" maxlength="40"
                         show-word-limit clearable />
@@ -163,8 +171,8 @@
                         editorId="updateArticleEditor" />
                 </el-form-item>
                 <el-form-item label="封面" prop="cover">
-                    <el-upload class="avatar-uploader" action="#" :on-change="handleUpdateCoverChange" :auto-upload="false"
-                        :show-file-list="false">
+                    <el-upload class="avatar-uploader" action="#" :on-change="handleUpdateCoverChange"
+                        :auto-upload="false" :show-file-list="false">
                         <img v-if="updateArticleForm.cover" :src="updateArticleForm.cover" class="avatar" />
                         <el-icon v-else class="avatar-uploader-icon">
                             <Plus />
@@ -177,7 +185,8 @@
                 </el-form-item>
                 <el-form-item label="分类" prop="categoryId">
                     <el-select v-model="updateArticleForm.categoryId" clearable placeholder="---请选择---" size="large">
-                        <el-option v-for="item in categories" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-option v-for="item in categories" :key="item.value" :label="item.label"
+                            :value="item.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="标签" prop="tags">
@@ -200,12 +209,15 @@ import { ref, reactive } from 'vue'
 import { Search, RefreshRight } from '@element-plus/icons-vue'
 import { getArticlePageList, deleteArticle, publishArticle, getArticleDetail, updateArticle } from '@/api/admin/article'
 import { uploadFile } from '@/api/admin/file'
+import { useRouter } from 'vue-router'
 import { getCategorySelectList } from '@/api/admin/category'
 import { searchTags, getTagSelectList } from '@/api/admin/tag'
 import moment from 'moment'
 import { showMessage, showModel } from '@/composables/util'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
+
+const router = useRouter
 
 // 模糊搜索的文章标题
 const searchArticleTitle = ref('')
@@ -319,6 +331,11 @@ const deleteArticleSubmit = (row) => {
     }).catch(() => {
         console.log('取消了')
     })
+}
+
+// 跳转文章详情页
+const goArticleDetailPage = (articleId) => {
+    router.push                                                                                                                                                                                                                                                     ('/article/' + articleId)
 }
 
 // 是否显示文章发布对话框

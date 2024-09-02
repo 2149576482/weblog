@@ -48,4 +48,16 @@ public class PageResponse<T> extends Result<List<T>> {
         return pageResponse;
     }
 
+    public static <T> PageResponse<T> success(long total, long size, long current, List<T> data) {
+        PageResponse<T> pageResponse = new PageResponse<>();
+        pageResponse.setSuccess(true);
+        pageResponse.setCurrent(current);
+        pageResponse.setSize(size);
+        long pages = total % size == 0 ? total : total / size + 1;
+        pageResponse.setTotal(total);
+        pageResponse.setPages(pages);
+        pageResponse.setData(data);
+        return pageResponse;
+    }
+
 }

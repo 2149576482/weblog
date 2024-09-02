@@ -15,5 +15,4 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @ApiModel(value = "首页查询文章分页 VO")
-public class FindIndexArticlePageListReqVO extends BasePageQuery {
-}
+public class FindIndexArticlePageListReqVO extends BasePageQuery {}

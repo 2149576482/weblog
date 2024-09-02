@@ -2,6 +2,7 @@ package com.smallfish.weblog.web.controller;
 
 import com.smallfish.weblog.common.aspect.ApiOperationLog;
 import com.smallfish.weblog.common.utils.Result;
+import com.smallfish.weblog.web.model.vo.article.FindArticleDetailReqVO;
 import com.smallfish.weblog.web.model.vo.article.FindIndexArticlePageListReqVO;
 import com.smallfish.weblog.web.service.ArticleService;
 import io.swagger.annotations.Api;
@@ -33,4 +34,10 @@ public class ArticleController {
         return articleService.findArticlePageList(findIndexArticlePageListReqVO);
     }
 
+    @PostMapping("detail")
+    @ApiOperation(value = "获取文章详情")
+    @ApiOperationLog(description = "获取文章详情")
+    public Result findDetail(@RequestBody FindArticleDetailReqVO findArticleDetailReqVO) {
+        return articleService.findDetail(findArticleDetailReqVO);
+    }
 }

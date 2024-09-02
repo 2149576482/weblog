@@ -2,6 +2,7 @@ package com.smallfish.weblog.common.domain.mapper;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smallfish.weblog.common.config.InsertBatchMapper;
+import com.smallfish.weblog.common.domain.dos.ArticleDO;
 import com.smallfish.weblog.common.domain.dos.ArticleTagRelDO;
 
 import java.util.List;
@@ -39,5 +40,13 @@ public interface ArticleTagRelMapper extends InsertBatchMapper<ArticleTagRelDO> 
     default List<ArticleTagRelDO> selectByArticleIds(List<Long> articleIds) {
         return selectList(Wrappers.<ArticleTagRelDO>lambdaQuery()
                 .in(ArticleTagRelDO::getArticleId, articleIds));
+    }
+
+    /**
+     * 根据标签id 获取到所有的文章
+     */
+    default List<ArticleTagRelDO> selectListByTagId(Long tagId) {
+        return selectList(Wrappers.<ArticleTagRelDO>lambdaQuery()
+                .eq(ArticleTagRelDO::getTagId, tagId));
     }
 }

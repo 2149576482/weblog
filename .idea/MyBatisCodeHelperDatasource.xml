@@ -98,6 +98,17 @@
                 </TableGenerateConfig>
               </value>
             </entry>
+            <entry key="weblog:t_statistics_article_pv">
+              <value>
+                <TableGenerateConfig>
+                  <option name="generatedKey" value="id" />
+                  <option name="javaModelName" value="StatisticsArticlePvDO" />
+                  <option name="sequenceColumn" value="" />
+                  <option name="sequenceId" value="" />
+                  <option name="useActualColumnName" value="false" />
+                </TableGenerateConfig>
+              </value>
+            </entry>
           </map>
         </option>
         <option name="userMybatisPlus" value="true" />

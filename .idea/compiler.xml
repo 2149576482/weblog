@@ -20,6 +20,7 @@
         <module name="weblog-module-admin" />
         <module name="weblog-module-common" />
         <module name="weblog-module-jwt" />
+        <module name="weblog-module-search" />
         <module name="weblog-web" />
       </profile>
     </annotationProcessing>
@@ -34,6 +35,7 @@
       <module name="weblog-module-admin" options="-parameters" />
       <module name="weblog-module-common" options="-parameters" />
       <module name="weblog-module-jwt" options="-parameters" />
+      <module name="weblog-module-search" options="-parameters" />
       <module name="weblog-web" options="-parameters" />
     </option>
   </component>

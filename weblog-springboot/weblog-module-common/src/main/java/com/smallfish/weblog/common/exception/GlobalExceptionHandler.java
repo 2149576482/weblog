@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * @author ArnanZZ
  * @version 1.0
- * @description:
+ * @description: 全局异常处理
  **/
 @ControllerAdvice
 @Slf4j
@@ -28,16 +28,6 @@ public class GlobalExceptionHandler {
     public Result<Object> handleBusinessException(HttpServletRequest request, BusinessException e) {
         log.warn("{} request fail, errorCode: {}, errorMessage: {}", request.getRequestURI(), e.getErrorCode(), e.getErrorMessage());
         return Result.fail(e);
-    }
-
-    /**
-     * 捕获其他异常
-     */
-    @ExceptionHandler({ Exception.class })
-    @ResponseBody
-    public Result<Object> handlerOtherException(HttpServletRequest request, Exception e) {
-        log.error("{} request error, ", request.getRequestURI(), e);
-        return Result.fail(ResultCodeEnum.SYSTEM_ERROR);
     }
 
     /**
@@ -77,5 +67,16 @@ public class GlobalExceptionHandler {
         log.info("============= 捕获到 AccessDeniedException");
         throw e;
     }
+
+    /**
+     * 捕获其他异常
+     */
+    @ExceptionHandler({ Exception.class })
+    @ResponseBody
+    public Result<Object> handlerOtherException(HttpServletRequest request, Exception e) {
+        log.error("{} request error, ", request.getRequestURI(), e);
+        return Result.fail(ResultCodeEnum.SYSTEM_ERROR);
+    }
+
 
 }
