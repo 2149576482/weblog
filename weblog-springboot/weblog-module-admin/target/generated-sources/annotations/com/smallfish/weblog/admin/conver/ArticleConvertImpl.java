@@ -12,7 +12,7 @@ import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-09-02T10:12:42+0800",
+    date = "2024-09-02T14:59:48+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 1.8.0_251 (Oracle Corporation)"
 )
 public class ArticleConvertImpl implements ArticleConvert {

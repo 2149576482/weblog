@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,6 +15,15 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+#=================================================================
+# minio (上传图片需要，需配置成自己的地址)
+#=================================================================
+minio:
+  endpoint: http://192.168.117.50:9000
+  accessKey: smallfish
+  secretKey: smallfish
+  bucketName: weblog
+
 #=================================================================
 # Lucene 全文检索
 #=================================================================
