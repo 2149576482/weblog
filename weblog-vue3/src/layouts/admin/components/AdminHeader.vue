@@ -49,7 +49,7 @@
                     <span class="el-dropdown-link flex items-center justify-center text-gray-700 text-xs">
                         <!-- 头像 Avatar -->
                         <el-avatar class="mr-2" :size="25"
-                            src="https://small-fish-weblog.oss-cn-beijing.aliyuncs.com/cat.png" />
+                            src="http://124.70.38.88:9000/weblog/edaee90eb8ea48898f6f33778eca5bb3.png" />
                         {{ userStore.userInfo.username }}
                         <el-icon class="el-icon--right">
                             <arrow-down />
@@ -92,8 +92,12 @@ import { updateAdminPassword } from '@/api/admin/user'
 import { showMessage, showModel } from '@/composables/util'
 import { useRouter } from 'vue-router'
 import FormDialog from '@/components/FormDialog.vue'
+import { useBlogSettingsStore } from '@/stores/blogsettings'
 
 const router = useRouter()
+
+// 引入博客设置信息 store
+const blogSettingsStore = useBlogSettingsStore()
 
 // isFullscreen 表示当前是否处于全屏；toggle 用于动态切换全屏、非全屏
 const { isFullscreen, toggle } = useFullscreen()

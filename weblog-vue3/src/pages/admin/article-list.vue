@@ -209,15 +209,15 @@ import { ref, reactive } from 'vue'
 import { Search, RefreshRight } from '@element-plus/icons-vue'
 import { getArticlePageList, deleteArticle, publishArticle, getArticleDetail, updateArticle } from '@/api/admin/article'
 import { uploadFile } from '@/api/admin/file'
-import { useRouter } from 'vue-router'
 import { getCategorySelectList } from '@/api/admin/category'
 import { searchTags, getTagSelectList } from '@/api/admin/tag'
 import moment from 'moment'
 import { showMessage, showModel } from '@/composables/util'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
+import { useRouter } from 'vue-router'
 
-const router = useRouter
+const router = useRouter()
 
 // 模糊搜索的文章标题
 const searchArticleTitle = ref('')
@@ -313,7 +313,7 @@ const handleSizeChange = (chooseSize) => {
 
 // 删除文章
 const deleteArticleSubmit = (row) => {
-    // console.log(row)
+    console.log(row)
     showModel('是否确定要删除该文章？').then(() => {
         deleteArticle(row.id).then((res) => {
             if (res.success == false) {
@@ -331,11 +331,6 @@ const deleteArticleSubmit = (row) => {
     }).catch(() => {
         console.log('取消了')
     })
-}
-
-// 跳转文章详情页
-const goArticleDetailPage = (articleId) => {
-    router.push                                                                                                                                                                                                                                                     ('/article/' + articleId)
 }
 
 // 是否显示文章发布对话框
@@ -439,7 +434,7 @@ const onUploadImg = async (files, callback) => {
 // 文章分类
 const categories = ref([])
 getCategorySelectList().then((e) => {
-    // console.log('获取分类数据')
+    console.log('获取分类数据')
     categories.value = e.data
 })
 
@@ -455,7 +450,7 @@ getTagSelectList().then(res => {
 
 // 根据用户输入的标签名称，远程模糊查询
 const remoteMethod = (query) => {
-    // console.log('远程搜索：' + tags.value)
+    console.log('远程搜索：' + tags.value)
     // 如果用户的查询关键词不为空
     if (query) {
         // 显示 loading
@@ -558,6 +553,11 @@ const updateSubmit = () => {
     })
 }
 
+
+// 跳转文章详情页
+const goArticleDetailPage = (articleId) => {
+    router.push('/article/' + articleId)
+}
 </script>
 
 <style scoped>

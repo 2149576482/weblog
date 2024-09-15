@@ -1,5 +1,6 @@
 package com.smallfish.weblog.common.domain.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -32,6 +33,20 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
                 .le(Objects.nonNull(endDate), ArticleDO::getCreateTime, endDate)
                 .orderByDesc(ArticleDO::getCreateTime);
 
+        return selectPage(page, wrapper);
+    }
+
+    /**
+     * 根据文章id 批量分页查询
+     * @param current
+     * @param size
+     * @return
+     */
+    default Page<ArticleDO> selectPageListByArticleIds(Long current, Long size, List<Long> articleIds) {
+        Page<ArticleDO> page = new Page<>(current, size);
+        LambdaQueryWrapper<ArticleDO> wrapper = Wrappers.<ArticleDO>lambdaQuery()
+                .in(ArticleDO::getId, articleIds) //批量查询
+                .orderByDesc(ArticleDO::getCreateTime);
         return selectPage(page, wrapper);
     }
 

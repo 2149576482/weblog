@@ -8,6 +8,7 @@ import com.smallfish.weblog.common.aspect.ApiOperationLog;
 import com.smallfish.weblog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ public class AdminCategoryController {
     @PostMapping("category/add")
     @ApiOperationLog(description = "添加分类")
     @ApiOperation(value = "添加分类")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result addCategory(@RequestBody @Validated AddCategoryReqVO addCategoryReqVO) {
         return adminCategoryService.addCategory(addCategoryReqVO);
     }
@@ -55,6 +57,7 @@ public class AdminCategoryController {
     @PostMapping("category/delete")
     @ApiOperationLog(description = "删除分类")
     @ApiOperation(value = "删除分类")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result deleteCategory(@RequestBody DeleteCategoryReqVO deleteCategoryReqVO) {
         return adminCategoryService.deleteCategory(deleteCategoryReqVO);
     }

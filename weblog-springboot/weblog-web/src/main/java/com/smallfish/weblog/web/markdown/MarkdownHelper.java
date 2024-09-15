@@ -1,7 +1,7 @@
 package com.smallfish.weblog.web.markdown;
 
-import com.smallfish.weblog.web.markdown.provider.NofollowLinkAttributeProvider;
 import com.smallfish.weblog.web.markdown.renderer.ImageNodeRenderer;
+import com.smallfish.weblog.web.markdown.renderer.LinkNodeRenderer;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
@@ -49,8 +49,8 @@ public class MarkdownHelper {
         PARSER = Parser.builder().extensions(extensions).build();
         HTML_RENDERER = HtmlRenderer.builder()
                 .extensions(extensions)
-                .attributeProviderFactory(context -> new NofollowLinkAttributeProvider())
                 .nodeRendererFactory(context -> new ImageNodeRenderer(context))
+                .nodeRendererFactory(context -> new LinkNodeRenderer(context))
                 .build();
     }
 

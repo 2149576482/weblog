@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author ArnanZZ
@@ -71,8 +72,6 @@ public class TagServiceImpl implements TagService {
             log.warn("==> 标签不存在, tagId: {}", tagId);
             throw new BusinessException(ResultCodeEnum.TAG_NOT_EXISTED);
         }
-        // 获取到分页对象
-        Page<ArticleDO> articleDOPage = articleMapper.selectPageList(current, size, null,null, null);
 
         // 根据标签id 获取到所有的文章标签对应关系
         List<ArticleTagRelDO> articleDOList = articleTagRelMapper.selectListByTagId(tagId);
@@ -83,18 +82,21 @@ public class TagServiceImpl implements TagService {
             return PageResponse.success(null, null);
         }
 
-        List<FindTagArticlePageListRspVO> findTagArticlePageListRspVOList = new ArrayList<>();
-        articleDOList.forEach(articleTagRelDO -> {
-            Long articleId = articleTagRelDO.getArticleId();
-            // 根据文章id 获取文章
-            ArticleDO articleDO = articleMapper.selectById(articleId);
+        // 获得所有文章ID
+        List<Long> articleIds = articleDOList.stream().map(ArticleTagRelDO::getArticleId).collect(Collectors.toList());
 
-            // DO -> VO
-            FindTagArticlePageListRspVO findTagArticlePageListRspVO = ArticleConvert.INSTANCE.tagArticleToVo(articleDO);
-            findTagArticlePageListRspVOList.add(findTagArticlePageListRspVO);
-        });
+        // 根据文章ID集合查询文章分页数据
+        Page<ArticleDO> articleDOPage = articleMapper.selectPageListByArticleIds(current, size, articleIds);
+        List<ArticleDO> articleDOS = articleDOPage.getRecords();
 
-        return PageResponse.success(articleDOPage, findTagArticlePageListRspVOList);
+        List<FindTagArticlePageListRspVO> vos = null;
+        if (!CollectionUtils.isEmpty(articleDOS)) {
+            vos = articleDOS.stream()
+                    .map(ArticleConvert.INSTANCE::tagArticleToVo)
+                    .collect(Collectors.toList());
+        }
+
+        return PageResponse.success(articleDOPage, vos);
     }
 }
 

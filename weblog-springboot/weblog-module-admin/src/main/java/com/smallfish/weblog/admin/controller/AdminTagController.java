@@ -8,6 +8,7 @@ import com.smallfish.weblog.common.aspect.ApiOperationLog;
 import com.smallfish.weblog.common.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ public class AdminTagController {
     @PostMapping("tag/add")
     @ApiOperation(value = "添加标签")
     @ApiOperationLog(description = "添加标签")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result addTag(@RequestBody @Validated AddTagReqVO addTagReqVO) {
         return adminTagService.addTag(addTagReqVO);
     }
@@ -55,6 +57,7 @@ public class AdminTagController {
     @PostMapping("tag/delete")
     @ApiOperationLog(description = "删除标签")
     @ApiOperation(value = "删除标签")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result deleteTag(@RequestBody DeleteTagReqVO deleteTagReqVO) {
         return adminTagService.deleteTag(deleteTagReqVO);
     }

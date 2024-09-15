@@ -145,7 +145,7 @@ function getTableData() {
     
     getCategoryPageList({current: current.value, size: size.value, startDate: startDate.value, endDate: endDate.value, name: searchCategoryName.value})
     .then((res) => {
-        if (res.success == true) {
+        if (res.success === true) {
             tableData.value = res.data
             current.value = res.current
             size.value = res.size

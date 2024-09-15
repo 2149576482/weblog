@@ -14,6 +14,7 @@ import com.smallfish.weblog.web.model.vo.article.*;
 import com.smallfish.weblog.web.model.vo.category.FindCategoryListRspVO;
 import com.smallfish.weblog.web.model.vo.tag.FindTagListRspVO;
 import com.smallfish.weblog.web.service.ArticleService;
+import com.smallfish.weblog.web.utils.MarkdownStatsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.parameters.P;
@@ -181,7 +182,11 @@ public class ArticleServiceImpl implements ArticleService {
 
         // 通过文章id 获取正文
         String content = articleContentMapper.findContentByArticleId(articleId);
+        // 计算正文字数
+        int totalWords = MarkdownStatsUtil.calculateWordCount(content);
         String convertContent = MarkdownHelper.convertMarkdown2Html(content);
+        findArticleDetailRspVO.setTotalWords(totalWords);
+        findArticleDetailRspVO.setReadTime(MarkdownStatsUtil.calculateReadingTime(totalWords));
         findArticleDetailRspVO.setContent(convertContent);
 
         // 通过文章id 获取分类 分类名称

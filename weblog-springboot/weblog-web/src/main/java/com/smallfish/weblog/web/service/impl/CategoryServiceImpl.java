@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author ArnanZZ
@@ -82,6 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 根据分类id 查询到所有的分类文章对应关系
         List<ArticleCategoryRelDO> articleCategoryRelDOS = articleCategoryRelMapper.selectListByCategoryId(categoryId);
+        List<Long> articleIds = articleCategoryRelDOS.stream().map(ArticleCategoryRelDO::getArticleId).collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(articleCategoryRelDOS)) {
             log.warn("==> 该分类下还未发布任何文章, categoryId: {}", categoryId);
@@ -89,24 +91,21 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         // 获取分页对象
-        Page<ArticleDO> articleDOPage = articleMapper.selectPageList(current, size, null, null, null);
+        Page<ArticleDO> articleDOPage = articleMapper.selectPageListByArticleIds(current, size, articleIds);
+        List<ArticleDO> articleDOS = articleDOPage.getRecords();
 
         // 返参列表
-        List<FindCategoryArticlePageListRspVO> findCategoryArticlePageListRspVOList = new ArrayList<>();
+        List<FindCategoryArticlePageListRspVO> vos = null;
 
         // 遍历关系
-        articleCategoryRelDOS.forEach(articleCategoryRelDO -> {
+        if (!CollectionUtils.isEmpty(articleDOS)) {
 
-            // 获取到分类对应的文章ID
-            Long articleId = articleCategoryRelDO.getArticleId();
-            // 根据文章ID获得文章
-            ArticleDO articleDO = articleMapper.selectById(articleId);
-            // 文章对象 转换 返参对象
-            FindCategoryArticlePageListRspVO findCategoryArticlePageListRspVO = ArticleConvert.INSTANCE.categoryArticleToVo(articleDO);
-            // 返参列表添加返参对象
-            findCategoryArticlePageListRspVOList.add(findCategoryArticlePageListRspVO);
-        });
-        return PageResponse.success(articleDOPage, findCategoryArticlePageListRspVOList);
+            vos = articleDOS.stream()
+                    .map(ArticleConvert.INSTANCE::categoryArticleToVo)
+                    .collect(Collectors.toList());
+
+        }
+        return PageResponse.success(articleDOPage, vos);
     }
 }
 
